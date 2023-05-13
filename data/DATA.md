@@ -3,7 +3,8 @@ The General Transit Feed Specification (GTFS) is a static public transit dataset
 (Real time data is available via API).   
 This dataset only contains the publicly available static data related to Trimet.   
 Dataset homepage: http://developer.trimet.org/GTFS.shtml  
-File come as gtfs.zip  
+File come as gtfs.zip
+Each file in the unzipped is a .txt file that is separated by commas (It's csv)  
 
 # Gtfs.zip contains:  
 ## Format: File name; size; number of rows; 12; used in project (3 spaces between)
