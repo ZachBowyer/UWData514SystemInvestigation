@@ -1,0 +1,4 @@
+# No data should be uploaded
+*.txt
+*.csv
+*.zip
