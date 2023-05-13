@@ -2,3 +2,6 @@
 *.txt
 *.csv
 *.zip
+
+# Credentials file and database information should not be known
+credentials.txt
