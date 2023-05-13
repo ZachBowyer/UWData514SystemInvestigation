@@ -18,3 +18,7 @@ credentialFileObject.close()
 #Get database information
 x = requests.get("http://" + username + ":" + password + "@" + ip + ":" + port)
 print(x.text)
+
+#Create database instance
+x = requests.put("http://" + username + ":" + password + "@" + ip + ":" + port + "/gtfs")
+print(x.text)
