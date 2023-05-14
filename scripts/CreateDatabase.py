@@ -86,8 +86,12 @@ data = {
             "getPCCDirections": 
             {
                 "map":"function(doc) {if(doc.doc_type == 'Route_direction') {if(doc.direction_name == 'To Portland City Center') {emit(doc._id, 1);}}}"
+            },
+            "getRouteByID":
+            {
+                "map": "function (doc) {if(doc.doc_type == 'Route'){emit(doc.route_id, doc);}}"
             }
         }
-       }
+    }
 x = requests.put("http://" + username + ":" + password + "@" + ip + ":" + port + "/gtfs/_design/queriesdesigndocument", json=data)
 print("     ", x.text)

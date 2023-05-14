@@ -33,18 +33,10 @@ directionstoPCC = requests.get("http://" + username + ":" + password + "@" + ip 
 print(directionstoPCC.text)
 
 #Extract routes
+test = requests.get("http://" + username + ":" + password + "@" + ip + ":" + port + "/gtfs/_design/queriesdesigndocument/_view/getRouteByID?key=\"2\"")
+print(test.text)
 
-#Get route data
+test = requests.get("http://" + username + ":" + password + "@" + ip + ":" + port + "/gtfs/_design/queriesdesigndocument/_view/getRouteByID?keys=[\"1\", \"2\"]")
+print(test.text)
 
-
-#function (doc) {
-#  if(doc.doc_type == 'Route_direction') {
-#    if(doc.direction_name == 'To Portland City Center') {
-#        emit(doc._id, 1);
-#    }
-#  }
-#}
-#
-##Get route by routeid
-#http://127.0.0.1:5984/testdb/_design/designdoc/_view/testview?key=[12,3]
-#http://localhost:5984/<database>/_design/<designdoc>/_view/<viewname>?key=<pid2>
+#Combine the entries
