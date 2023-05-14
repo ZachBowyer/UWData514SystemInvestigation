@@ -85,7 +85,7 @@ data = {
         {
             "getPCCDirections": 
             {
-                "map":"function(doc) {if(doc.doc_type == 'Route_direction') {if(doc.direction_name == 'To Portland City Center') {emit(doc._id, 1);}}}"
+                "map":"function(doc) {if(doc.doc_type == 'Route_direction') {if(doc.direction_name == 'To Portland City Center') {emit(doc._id, doc);}}}"
             },
             "getRouteByID":
             {

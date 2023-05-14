@@ -31,6 +31,10 @@ credentialFileObject.close()
 #Get directions to Portland city center
 directionstoPCC = requests.get("http://" + username + ":" + password + "@" + ip + ":" + port + "/gtfs/_design/queriesdesigndocument/_view/getPCCDirections")
 print(directionstoPCC.text)
+#print(directionstoPCC.json())
+#directionsRows = directionstoPCC.json()["rows"]
+#for row in directionsRows:
+#    print(row[])
 
 #Extract routes
 test = requests.get("http://" + username + ":" + password + "@" + ip + ":" + port + "/gtfs/_design/queriesdesigndocument/_view/getRouteByID?key=\"2\"")
