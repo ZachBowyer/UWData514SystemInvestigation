@@ -62,37 +62,32 @@ def writetodbfromtxt(filePath, doc_type):
         print("For: ", doc_type, "sent a total of", counter, "rows")
 
 #Add documents to table
-writetodbfromtxt("../data/gtfs/agency.txt", "Agency")
-writetodbfromtxt("../data/gtfs/calendar_dates.txt", "Calendar_date")
-writetodbfromtxt("../data/gtfs/calendar.txt", "Calendar")
-writetodbfromtxt("../data/gtfs/fare_attributes.txt", "Fare_attribute")
-writetodbfromtxt("../data/gtfs/fare_rules.txt", "Fare_rule")
-writetodbfromtxt("../data/gtfs/route_directions.txt", "Route_direction")
-writetodbfromtxt("../data/gtfs/routes.txt", "Route")
-writetodbfromtxt("../data/gtfs/shapes.txt", "Shape")
-writetodbfromtxt("../data/gtfs/stop_features.txt", "Stop_Feature")
-writetodbfromtxt("../data/gtfs/stop_times.txt", "Stop_time")
-writetodbfromtxt("../data/gtfs/stops.txt", "Stop")
-writetodbfromtxt("../data/gtfs/transfers.txt", "Transfer")
-writetodbfromtxt("../data/gtfs/trips.txt", "Trip")
+#writetodbfromtxt("../data/gtfs/agency.txt", "Agency")
+#writetodbfromtxt("../data/gtfs/calendar_dates.txt", "Calendar_date")
+#writetodbfromtxt("../data/gtfs/calendar.txt", "Calendar")
+#writetodbfromtxt("../data/gtfs/fare_attributes.txt", "Fare_attribute")
+#writetodbfromtxt("../data/gtfs/fare_rules.txt", "Fare_rule")
+#writetodbfromtxt("../data/gtfs/route_directions.txt", "Route_direction")
+#writetodbfromtxt("../data/gtfs/routes.txt", "Route")
+#writetodbfromtxt("../data/gtfs/shapes.txt", "Shape")
+#writetodbfromtxt("../data/gtfs/stop_features.txt", "Stop_Feature")
+#writetodbfromtxt("../data/gtfs/stop_times.txt", "Stop_time")
+#writetodbfromtxt("../data/gtfs/stops.txt", "Stop")
+#writetodbfromtxt("../data/gtfs/transfers.txt", "Transfer")
+#writetodbfromtxt("../data/gtfs/trips.txt", "Trip")
 
-#Create design document
+#Create design document and views
 print("Creating design document...")
-data = {"id": "_design/queries", "language": "javascript"}
+data = {
+        "id": "_design/queries", 
+        "language": "javascript",
+        "views": 
+        {
+            "getPCCDirections": 
+            {
+                "map":"function(doc) {if(doc.doc_type == 'Route_direction') {if(doc.direction_name == 'To Portland City Center') {emit(doc._id, 1);}}}"
+            }
+        }
+       }
 x = requests.put("http://" + username + ":" + password + "@" + ip + ":" + port + "/gtfs/_design/queriesdesigndocument", json=data)
 print("     ", x.text)
-
-#Create views
-##Add view to existing document
-#data = {
-#        "_id": "_design/testdesigndoc1",
-#        "_rev": "1-8c8e8ec35da23da3e441cd3350006d92",
-#        "language":"javascript",
-#        "views":{
-#            "GetPeople":{
-#                "map":"function(doc) {if(doc.type == 'Person') {emit(doc._id, 1);}}"
-#                }
-#            }
-#        }
-#x = requests.put("http://" + username + ":" + password + "@127.0.0.1:5984/testdbpython/_design/testdesigndoc1", json=data)
-#print("add view", x.text)
