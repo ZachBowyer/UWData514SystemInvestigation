@@ -7,7 +7,8 @@ File come as gtfs.zip
 Each file in the unzipped is a .txt file that is separated by commas (It's csv)  
 Number of rows was original download, subject to change. 
 This is real time data periodically updated
-Offical dataset documentation here: https://developers.google.com/transit/gtfs/reference#term_definitions 
+Offical dataset documentation here: https://developers.google.com/transit/gtfs/reference#term_definitions
+Directions for dataset from instructor: https://drive.google.com/drive/folders/1R9AcwnJ8-DUfKevTnCjHsTiTUnwqT5Hl  
 
 # Gtfs.zip contains:  
 ## Format: File name; size; number of rows; 12; used in project (3 spaces between)
