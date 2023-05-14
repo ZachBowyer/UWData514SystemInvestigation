@@ -33,6 +33,7 @@ def writetodbfromtxt(filePath, doc_type):
         #Insert doc_type field so database can tell difference between files
         fields.insert(0, "doc_type") 
 
+        bulkdocs = []
         counter = 0
         for row in csvreader:
             data = row
@@ -46,38 +47,52 @@ def writetodbfromtxt(filePath, doc_type):
 
             #Create json from fields and data
             json_data = dict(zip(fields, data))
+            bulkdocs.append(json_data)
 
-            #Insert row into database
-            docName = str(doc_type) + str(counter)
-            #print("Attempting to add", docName)
-            x = requests.put("http://" + username + ":" + password + "@" + ip + ":" + port + "/gtfs/" + docName, json=json_data)
-            #print("     ", x.content)
+            #Send batches of 100000 or less
+            if(len(bulkdocs) >= 100000):
+                json_bulk = {"docs": bulkdocs}
+                x = requests.post("http://" + username + ":" + password + "@" + ip + ":" + port + "/gtfs/" + "_bulk_docs", json=json_bulk)
+                bulkdocs = []
             counter += 1
 
+        #Final batch (remaining data)
+        json_bulk = {"docs": bulkdocs}
+        x = requests.post("http://" + username + ":" + password + "@" + ip + ":" + port + "/gtfs/" + "_bulk_docs", json=json_bulk)
+        print("For: ", doc_type, "sent a total of", counter, "rows")
+
 #Add documents to table
-print("Adding agency")
 writetodbfromtxt("../data/gtfs/agency.txt", "Agency")
-print("Adding calendar dates")
 writetodbfromtxt("../data/gtfs/calendar_dates.txt", "Calendar_date")
-print("Adding calendar")
 writetodbfromtxt("../data/gtfs/calendar.txt", "Calendar")
-print("Adding fare attributes")
 writetodbfromtxt("../data/gtfs/fare_attributes.txt", "Fare_attribute")
-print("Adding fare rules")
 writetodbfromtxt("../data/gtfs/fare_rules.txt", "Fare_rule")
-print("Adding route directions")
 writetodbfromtxt("../data/gtfs/route_directions.txt", "Route_direction")
-print("Adding routes")
 writetodbfromtxt("../data/gtfs/routes.txt", "Route")
-print("Adding shapes")
 writetodbfromtxt("../data/gtfs/shapes.txt", "Shape")
-print("Adding stop features")
 writetodbfromtxt("../data/gtfs/stop_features.txt", "Stop_Feature")
-print("Adding stop times")
 writetodbfromtxt("../data/gtfs/stop_times.txt", "Stop_time")
-print("Adding stops")
 writetodbfromtxt("../data/gtfs/stops.txt", "Stop")
-print("Adding transfers")
 writetodbfromtxt("../data/gtfs/transfers.txt", "Transfer")
-print("Adding trips")
 writetodbfromtxt("../data/gtfs/trips.txt", "Trip")
+
+#Create design document
+print("Creating design document...")
+data = {"id": "_design/queries", "language": "javascript"}
+x = requests.put("http://" + username + ":" + password + "@" + ip + ":" + port + "/gtfs/_design/queriesdesigndocument", json=data)
+print("     ", x.text)
+
+#Create views
+##Add view to existing document
+#data = {
+#        "_id": "_design/testdesigndoc1",
+#        "_rev": "1-8c8e8ec35da23da3e441cd3350006d92",
+#        "language":"javascript",
+#        "views":{
+#            "GetPeople":{
+#                "map":"function(doc) {if(doc.type == 'Person') {emit(doc._id, 1);}}"
+#                }
+#            }
+#        }
+#x = requests.put("http://" + username + ":" + password + "@127.0.0.1:5984/testdbpython/_design/testdesigndoc1", json=data)
+#print("add view", x.text)
