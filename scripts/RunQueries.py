@@ -5,6 +5,8 @@ Runs query3
 """
 import requests
 import json
+from datetime import date
+from datetime import time
 
 #Read in credentials
 credentialsFilePath = '../credentials.txt'
@@ -52,16 +54,67 @@ for row in routesToPCC.json()["rows"]:
 # Calendar days are all 0??????????
 # Maybe join on calendar_dates.txt and get the days it is added..... 
 print("Query 2: On which days does the MAX Red Line run within the given time range?")
+starttime = time(4,0,0)
+endtime = time(9,0,0)
+
+#Get routes that have "MAX Red line" as a long name
 routes_MRL = requests.get("http://" + username + ":" + password + "@" + ip + ":" + port + "/gtfs/_design/queriesdesigndocument/_view/getMLR_routes").json()["rows"]
 MRL_route_ids = []
 for x in routes_MRL: MRL_route_ids.append(x["key"]["route_id"])
-keystr = stringfromlist(MRL_route_ids)
+print("     ", "Routes associated with MAX Red Line ", MRL_route_ids)
 
-MRL_trips = requests.get("http://" + username + ":" + password + "@" + ip + ":" + port + "/gtfs/_design/queriesdesigndocument/_view/getTripsByRouteID?keys="+keystr).json()["rows"]
+#Get trips associated with the routes
+keystr = stringfromlist(MRL_route_ids)
+trips_MLR = requests.get("http://" + username + ":" + password + "@" + ip + ":" + port + "/gtfs/_design/queriesdesigndocument/_view/getTripsByRouteID?keys="+keystr).json()["rows"]
+MRL_tripids = []
+for x in trips_MLR: 
+    MRL_tripids.append(x["value"]["trip_id"])
+print("     ", "There are", len(MRL_tripids), "trips associated with the routes")
+
+#Out of the trips we have so far, keep only the trips that fall between the start and end time
+validStopTimeTripIDS = []
+for tripid in MRL_tripids:
+    tripStopTimes = requests.get("http://" + username + ":" + password + "@" + ip + ":" + port + "/gtfs/_design/queriesdesigndocument/_view/getStopTimesByTripID?keys=[\"" + tripid + "\"]").json()["rows"]
+    #print(tripid, tripStopTimes)
+    for x in tripStopTimes:
+        arrivalTime = x["value"]["arrival_time"]
+        tid = x["value"]["trip_id"]
+        arrivalHour = int(arrivalTime[0:2])
+        if(arrivalHour >= 24): arrivalHour -= 24
+        arrivalMinute = int(arrivalTime[3:5])
+        arrivalSecond = int(arrivalTime[6:8])
+        arrivalTime = time(arrivalHour, arrivalMinute, arrivalSecond)
+        if(arrivalTime > starttime and arrivalTime < endtime):
+            validStopTimeTripIDS.append(tid)
+validStopTimeTripIDS = list(set(validStopTimeTripIDS))
+print("     ", "There are", len(validStopTimeTripIDS), "trip ids that have at least 1 stop which falls in the time range")
+
+#Get all the serviced associated with the remaining trips
+keystr = stringfromlist(validStopTimeTripIDS)
+services_MLR = requests.get("http://" + username + ":" + password + "@" + ip + ":" + port + "/gtfs/_design/queriesdesigndocument/_view/getTripsByTripID?keys="+keystr).json()["rows"]
 MRL_service_ids = []
-for x in MRL_trips: MRL_service_ids.append(x["value"]["service_id"])
-MRL_service_ids = set(MRL_service_ids)
-print(MRL_service_ids)
+for x in services_MLR: MRL_service_ids.append(x["value"]["service_id"])
+MRL_service_ids = list(set(MRL_service_ids))
+print("     ", "Service ids associated with the trips", MRL_service_ids)
+
+#Get the calendar_dates associated with services
+keystr = stringfromlist(MRL_service_ids)
+dates_MLR = requests.get("http://" + username + ":" + password + "@" + ip + ":" + port + "/gtfs/_design/queriesdesigndocument/_view/getCalendarDatesBySID?keys="+keystr).json()["rows"]
+MRL_dates = []
+for x in dates_MLR: MRL_dates.append(x["value"]["date"])
+MRL_dates = list(set(MRL_dates))
+print("     ", "There are", len(MRL_dates), "dates associated with the services")
+
+#Get the day of each calendar_date
+daysofweek = []
+for d in MRL_dates:
+    year = int(d[0:4])
+    month = int(d[4:6])
+    day = int(d[6:8])
+    dateobject = date(int(year), int(month), int(day))
+    daysofweek.append(dateobject.strftime('%A'))
+daysofweek = list(set(daysofweek))
+print("     ", "The days of the week that MAX Red Line runs between", starttime, endtime, "is", daysofweek)
 
 ####################################################################################
 #Query 3: 

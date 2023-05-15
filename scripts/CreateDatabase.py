@@ -98,6 +98,22 @@ data = {
             "getTripsByRouteID":
             {
                 "map": "function(doc) {if(doc.doc_type == 'Trip'){emit(doc.route_id, doc);}}"
+            },
+            "getTripsByTripID":
+            {
+                "map": "function(doc) {if(doc.doc_type == 'Trip'){emit(doc.trip_id, doc);}}"
+            },
+            "getCalendarDatesBySID":
+            {
+                "map": "function(doc) {if(doc.doc_type == 'Calendar_date'){emit(doc.service_id, doc);}}"
+            },
+            "getStopTimesByTripID":
+            {
+                "map": "function(doc) {if(doc.doc_type == 'Stop_time'){emit(doc.trip_id, doc);}}"
+            },
+            "getServicesByTripID":
+            {
+                "map": "function(doc) {if(doc.doc_type == 'Trip'){emit(doc.trip_id, doc);}}"
             }
         }
     }
