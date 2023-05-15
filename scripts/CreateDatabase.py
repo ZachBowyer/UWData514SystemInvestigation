@@ -85,11 +85,19 @@ data = {
         {
             "getPCCDirections": 
             {
-                "map":"function(doc) {if(doc.doc_type == 'Route_direction') {if(doc.direction_name == 'To Portland City Center') {emit(doc._id, doc);}}}"
+                "map": "function(doc) {if(doc.doc_type == 'Route_direction') {if(doc.direction_name == 'To Portland City Center') {emit(doc._id, doc);}}}"
             },
             "getRouteByID":
             {
-                "map": "function (doc) {if(doc.doc_type == 'Route'){emit(doc.route_id, doc);}}"
+                "map": "function(doc) {if(doc.doc_type == 'Route'){emit(doc.route_id, doc);}}"
+            },
+            "getMLR_routes":
+            {
+                "map": "function(doc){if(doc.doc_type == 'Route') {if(doc.route_long_name == 'MAX Red Line') {emit(doc);}}}"
+            },
+            "getTripsByRouteID":
+            {
+                "map": "function(doc) {if(doc.doc_type == 'Trip'){emit(doc.route_id, doc);}}"
             }
         }
     }
