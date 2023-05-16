@@ -111,9 +111,17 @@ data = {
             {
                 "map": "function(doc) {if(doc.doc_type == 'Stop_time'){emit(doc.trip_id, doc);}}"
             },
-            "getServicesByTripID":
+            "get_PSUUC_stops": 
             {
-                "map": "function(doc) {if(doc.doc_type == 'Trip'){emit(doc.trip_id, doc);}}"
+                "map": "function(doc) {if(doc.doc_type == 'Stop') {if(doc.stop_name == 'PSU Urban Center') {emit(doc._id, doc);}}}"
+            },
+            "getStopTimesByStopID":
+            {
+                "map": "function(doc) {if(doc.doc_type == 'Stop_time'){emit(doc.stop_id, doc);}}"
+            },
+            "getRouteDirectionsByRouteID":
+            {
+                "map": "function(doc) {if(doc.doc_type == 'Route_direction'){emit(doc.route_id, doc);}}"
             }
         }
     }
