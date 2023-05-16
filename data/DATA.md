@@ -12,6 +12,7 @@ Directions for dataset from instructor: https://drive.google.com/drive/folders/1
 
 # Gtfs.zip contains:  
 ## Format: File name; size; number of rows; 12; used in project (3 spaces between)
+## (Number of rows and size are estimates, as the data changes per download...)
     Agency.txt;             1kb;        3 rows;         Used
     calendar.txt;           2kb;        56 rows;        Used
     calendar_dates.txt;     10kb;       598 rows;       Used
@@ -30,6 +31,7 @@ Directions for dataset from instructor: https://drive.google.com/drive/folders/1
 
 # File descriptions
 ## Format: Name of file, size, number of rows. Below that is attribute, data type, example
+## (Number of rows and size are estimates, as the data changes per download...)
 ## agency.txt; 1kb; 3 Rows
     agency_id;          string;   "TRIMET"  
     agency_name;        string;   "TriMet"  
