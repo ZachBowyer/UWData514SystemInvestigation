@@ -1,7 +1,11 @@
 """
-Runs query1
-Runs query2
-Runs query3
+This file combines calling views and client operations to answer the three questions specified by the project instructions
+The three questions are:
+1. List routes that go to 'Portland City Center'
+2. On which days does the MAX Red Line run within the given time range?"
+3. Which modes of public transport (routes) are available near ‘PSU Urban Center’ at the latest possible time before 9.00 AM (ignore date)?
+   Display stops around PSU Urban Center, type of stop location, type of transportation (route), it’s time of arrival and direction (direction name)
+To run this file, use the command 'python RunQueries.py', you will need to have ./credentials.txt
 """
 import requests
 import json
@@ -18,7 +22,7 @@ port = credentialFileObject.readline().strip()
 credentialFileObject.close()
 url = "http://" + username + ":" + password + "@" + ip + ":" + port + "/gtfs"
 
-#Creates string from list data
+#Creates string from list data that fits the HTTP format
 def stringfromlist(data):
     keystr = "["
     for i in range(len(data)):
